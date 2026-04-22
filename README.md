@@ -1,90 +1,113 @@
-# Child'sPay | Secure Financial Ledger
+<div align="center">
+  <h1>💰 Child'sPay Neobank</h1>
+  <p><em>A high-integrity, async financial ledger simulating core neobanking operations.</em></p>
 
-Child'sPay is a high-integrity, secure financial ledger application built to simulate core banking operations including authentication, account balance checking, and secure fund transfers. It demonstrates a robust, modern backend architecture alongside a clean, responsive frontend.
+  <!-- Badges -->
+  <p>
+    <a href="https://github.com/unamatasanatarai/childs-play-neobank-python-docker/issues"><img src="https://img.shields.io/github/issues/unamatasanatarai/childs-play-neobank-python-docker" alt="Issues"></a>
+    <a href="https://github.com/unamatasanatarai/childs-play-neobank-python-docker/network/members"><img src="https://img.shields.io/github/forks/unamatasanatarai/childs-play-neobank-python-docker" alt="Forks"></a>
+    <a href="https://github.com/unamatasanatarai/childs-play-neobank-python-docker/stargazers"><img src="https://img.shields.io/github/stars/unamatasanatarai/childs-play-neobank-python-docker" alt="Stars"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL_v2.0-blue.svg" alt="License"></a>
+    <img src="https://img.shields.io/badge/Python-3.12-blue.svg" alt="Python 3.12">
+    <img src="https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg" alt="FastAPI">
+    <img src="https://img.shields.io/badge/PostgreSQL-16-336791.svg" alt="PostgreSQL">
+  </p>
+</div>
 
-## 🚀 Key Features
+<hr />
 
-* **Secure Authentication:** JWT-based user authentication and session management.
-* **Financial Ledger Integrity:** Designed to ensure strict ACID compliance during transfers, maintaining accurate system-wide ledger balances without data race conditions.
-* **Asynchronous Backend:** Built with FastAPI and Async SQLAlchemy for high performance and scalable concurrency.
-* **RESTful API Design:** Clean and well-structured API endpoints for authentication and banking operations.
-* **Responsive UI:** A lightweight, dependency-free vanilla JavaScript and HTML frontend styled with PicoCSS.
-* **Containerized Deployment:** Fully Dockerized using `docker-compose` for seamless local setup and environment consistency.
+## 📖 Overview
 
-## 🛠️ Technology Stack
+**Child'sPay** is an open-source, high-integrity financial ledger application. Designed to simulate core banking operations, it securely handles user authentication, real-time account balances, and concurrency-safe fund transfers. The project serves as an excellent reference implementation for building scalable, ACID-compliant fintech backends using modern Python.
 
-**Backend:**
-* [FastAPI](https://fastapi.tiangolo.com/) - High-performance web framework for APIs
-* [PostgreSQL](https://www.postgresql.org/) - Robust relational database
-* [SQLAlchemy (Asyncpg)](https://www.sqlalchemy.org/) - Asynchronous ORM for database interactions
-* [Alembic](https://alembic.sqlalchemy.org/) - Database migration management
-* [PyJWT](https://pyjwt.readthedocs.io/) - Secure token generation and validation
-* [Pytest](https://docs.pytest.org/) - Testing framework
+Whether you're looking to integrate a robust microservice ledger, or learn about handling database race conditions with asynchronous SQL, Child'sPay provides a production-ready blueprint.
 
-**Frontend:**
-* HTML5 / CSS3 / Vanilla JavaScript
-* [PicoCSS](https://picocss.com/) - Minimalist CSS framework
+## ✨ Key Features
 
-**Infrastructure:**
-* [Docker & Docker Compose](https://www.docker.com/)
+* 🔐 **Secure Authentication:** JWT-based stateless user authentication and session management. Passwords are computationally hashed using Argon2.
+* 🛡️ **Financial Ledger Integrity:** Strict ACID compliance. Uses row-level locking (`SELECT ... FOR UPDATE`) to prevent double-spend anomalies and race conditions during concurrent fund transfers.
+* ⚡ **High-Performance Async Backend:** Built from the ground up with **FastAPI** and **SQLAlchemy 2.0 (Asyncpg)** to handle thousands of concurrent transactions.
+* 🧪 **Bulletproof Testing Suite:** Extensive end-to-end, integrity, and concurrency testing. All tests run safely against an ephemeral, auto-generated testing database.
+* 📱 **Responsive UI Included:** Comes with a lightweight, dependency-free vanilla JavaScript frontend styled with PicoCSS.
+* 🐳 **Fully Containerized:** Instantly reproducible environments using Docker and Docker Compose.
 
-## 🏗️ Getting Started
+---
+
+## 💻 Technology Stack
+
+### Backend Engine
+* **[FastAPI](https://fastapi.tiangolo.com/)**: Blazing fast web framework for APIs
+* **[PostgreSQL 16](https://www.postgresql.org/)**: Robust, enterprise-grade relational database
+* **[SQLAlchemy (Asyncpg)](https://www.sqlalchemy.org/)**: Asynchronous ORM handling connections
+* **[Alembic](https://alembic.sqlalchemy.org/)**: Seamless database schema migrations
+* **[PyJWT](https://pyjwt.readthedocs.io/) & [Argon2](https://argon2-cffi.readthedocs.io/)**: Industry-standard cryptographic security
+* **[Pytest-Asyncio](https://pytest-asyncio.readthedocs.io/)**: Comprehensive asynchronous testing
+
+### Frontend & Infrastructure
+* **UI**: HTML5, CSS3, Vanilla JS, [PicoCSS](https://picocss.com/)
+* **Ops**: Docker, Docker Compose, GNU Make
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
+Before you begin, ensure you have the following installed on your machine:
+* [Docker](https://docs.docker.com/get-docker/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+* `make` (Usually pre-installed on Linux/macOS)
 
-Ensure you have Docker and Docker Compose installed on your local machine.
+### 1. Installation
 
-### Installation & Execution
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/unamatasanatarai/childs-play-neobank-python-docker.git
-   cd childs-play-neobank-python-docker
-   ```
-
-2. **Start the application:**
-   The entire stack (API and Database) can be built, initialized, and seeded effortlessly using the provided Makefile setup routine:
-   ```bash
-   make setup
-   ```
-   
-   *Alternative commands:*
-   * `make up` - Starts the containers in the background.
-   * `make stop` - Stops the running containers.
-   * `make down` - Removes containers and networks.
-   * `make logs` - Tails the API logs.
-
-3. **Access the Application:**
-   * **Web Interface:** Open `public/index.html` directly in your preferred web browser.
-   * **API Documentation (Swagger UI):** Visit [http://localhost:8000/docs](http://localhost:8000/docs) to explore and interact with the backend API endpoints.
-
-### Seed Data & Testing
-
-The database is configured to automatically seed initial test data for demonstration purposes (e.g., 5 users, each with a starting balance of $100.00). 
-
-**Demo Accounts:** 
-* `user1@example.com` (Password: `password123`)
-* `user2@example.com` (Password: `password123`)
-* `user3@example.com` (Password: `password123`)
-* `user4@example.com` (Password: `password123`)
-* `user5@example.com` (Password: `password123`)
-
-**Running Integrity Tests:**
-To verify the ledger's integrity (ensuring the total system balance remains constant at 50,000 cents):
+Clone the repository and navigate into the project directory:
 ```bash
-make test
+git clone https://github.com/unamatasanatarai/childs-play-neobank-python-docker.git
+cd childs-play-neobank-python-docker
 ```
 
-## 📐 Architecture Overview
+### 2. Launch the Application
 
-* **`app/auth/`**: Manages user models, JWT token creation, password hashing, and login endpoints.
-* **`app/banking/`**: Contains the core business logic, defining accounts, executing transactions, and serving transfer endpoints.
-* **`app/database.py`**: Configures the asynchronous PostgreSQL database engine and session lifecycle.
-* **`public/`**: Hosts the client-side single-page application that consumes the REST API.
-* **`tests/`**: Contains automated tests, particularly focusing on ledger consistency and transactional safety.
+Child'sPay comes with a comprehensive `Makefile` that handles building the containers, running database migrations, and injecting seed data. 
 
-## 🔒 Security & Best Practices
+To fire everything up in one command, run:
+```bash
+make setup
+```
 
-* Passwords are securely hashed using `argon2` and never stored in plaintext.
-* Protected API endpoints require Bearer JWT tokens for access.
-* Database operations utilize transactions to prevent race conditions and ensure data anomalies do not occur during concurrent fund transfers.
+*The API will be available at `http://localhost:8000`.*
+
+### 3. Usage & Exploration
+
+* **Web Application:** Open the `public/index.html` file in your preferred web browser to interact with the frontend.
+* **Interactive API Docs:** Visit **[http://localhost:8000/docs](http://localhost:8000/docs)** to view the Swagger UI and test REST endpoints directly.
+
+#### Demo Accounts
+The `make setup` command automatically provisions 5 demo accounts. Each starts with a `$100.00` balance.
+* **Emails:** `user1@example.com` through `user5@example.com`
+* **Password:** `password123`
+
+---
+
+## 🛠️ Essential Commands
+
+Manage the lifecycle of the application using `make`:
+
+| Command | Description |
+|---|---|
+| `make up` | Starts the Docker containers in the background. |
+| `make logs` | Tails the live output of the FastAPI backend logs. |
+| `make test` | Rebuilds a temporary isolated database and runs the full Pytest suite (E2E & Concurrency). |
+| `make stop` | Stops the running containers gracefully. |
+| `make clean` | Tears down the containers and destroys the main database volume. |
+| `make destroy` | **Nuke option:** Completely destroys all containers, volumes, cached layers, and local Python cache files. |
+
+---
+
+## 📄 License
+
+This project is licensed under the GNU General Public License v2.0. See the [LICENSE](LICENSE) file for full details.
+
+---
+<div align="center">
+  <p>Built with a 🧛.</p>
+</div>
