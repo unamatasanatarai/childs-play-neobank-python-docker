@@ -2,7 +2,7 @@ import pytest
 import httpx
 from uuid import uuid4
 
-from tests.config import BASE_API_V1_URL
+from tests.config import BASE_API_V1_URL, get_test_client
 
 
 @pytest.mark.asyncio
@@ -10,7 +10,7 @@ async def test_login_success():
     email = f"login_user_{uuid4().hex[:8]}@example.com"
     password = "StrongPassword123!"
 
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         # Register first
         await client.post("/auth/register", json={"email": email, "password": password})
 
@@ -28,7 +28,7 @@ async def test_login_success():
 async def test_login_wrong_password():
     email = f"login_wrong_{uuid4().hex[:8]}@example.com"
 
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         await client.post(
             "/auth/register", json={"email": email, "password": "CorrectPassword1!"}
         )
@@ -44,7 +44,7 @@ async def test_login_wrong_password():
 async def test_login_non_existent_user():
     email = f"nonexistent_{uuid4().hex[:8]}@example.com"
 
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         res = await client.post(
             "/auth/login", json={"email": email, "password": "SomePassword1!"}
         )
@@ -54,6 +54,6 @@ async def test_login_non_existent_user():
 
 @pytest.mark.asyncio
 async def test_login_missing_fields():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         res = await client.post("/auth/login", json={"email": "test@example.com"})
         assert res.status_code == 422

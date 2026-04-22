@@ -2,7 +2,7 @@ import pytest
 import httpx
 from uuid import uuid4
 
-from tests.config import BASE_API_V1_URL
+from tests.config import BASE_API_V1_URL, get_test_client
 
 
 async def get_seeded_user_with_funds(client: httpx.AsyncClient):
@@ -23,7 +23,7 @@ async def get_seeded_user_with_funds(client: httpx.AsyncClient):
 
 @pytest.mark.asyncio
 async def test_transfer_success():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         # 1. Get a sender with funds
         (
             sender_token,
@@ -57,7 +57,7 @@ async def test_transfer_insufficient_funds():
     email = f"broke_{uuid4().hex[:8]}@example.com"
     password = "Password123!"
 
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         # Register a new user (balance 0)
         await client.post("/auth/register", json={"email": email, "password": password})
         login_res = await client.post(
@@ -80,7 +80,7 @@ async def test_transfer_insufficient_funds():
 
 @pytest.mark.asyncio
 async def test_transfer_to_self():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         # We need the user's own account ID. Since /accounts excludes it, we must fetch it from another user's perspective.
         (
             sender_token,
@@ -124,7 +124,7 @@ async def test_transfer_to_self():
 
 @pytest.mark.asyncio
 async def test_transfer_nonexistent_recipient():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         sender_token, _, _, sender_headers = await get_seeded_user_with_funds(client)
         fake_uuid = str(uuid4())
 
@@ -139,7 +139,7 @@ async def test_transfer_nonexistent_recipient():
 
 @pytest.mark.asyncio
 async def test_transfer_zero_or_negative_amount():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         sender_token, _, _, sender_headers = await get_seeded_user_with_funds(client)
 
         # Get recipient
@@ -163,7 +163,7 @@ async def test_transfer_zero_or_negative_amount():
 
 @pytest.mark.asyncio
 async def test_transfer_unauthenticated():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         payload = {"recipient_id": str(uuid4()), "amount": 100}
         res = await client.post("/banking/transfer", json=payload)
         assert res.status_code == 401

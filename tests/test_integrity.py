@@ -1,4 +1,5 @@
 import pytest
+import tests.config  # MUST be before app imports to set DATABASE_URL
 from sqlalchemy import select, func
 from app.banking.models import Account
 from app.auth.models import User

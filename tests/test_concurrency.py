@@ -2,7 +2,7 @@ import asyncio
 import pytest
 import httpx
 
-from tests.config import BASE_API_V1_URL
+from tests.config import BASE_API_V1_URL, get_test_client
 
 
 @pytest.mark.asyncio
@@ -12,7 +12,7 @@ async def test_double_spend_prevention():
     results in only one success and one 'Insufficient Funds' error.
     """
     # 1. Login as a User (seeded with 10,000)
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         sender_token = None
         balance = 0
         sender_email = ""

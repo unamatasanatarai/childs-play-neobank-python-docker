@@ -2,7 +2,7 @@ import pytest
 import httpx
 from uuid import uuid4
 
-from tests.config import BASE_API_V1_URL
+from tests.config import BASE_API_V1_URL, get_test_client
 
 @pytest.mark.asyncio
 async def test_end_to_end_user_journey():
@@ -19,7 +19,7 @@ async def test_end_to_end_user_journey():
     new_user_email = f"e2e_user_{uuid4().hex[:8]}@example.com"
     password = "StrongPassword123!"
 
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         # Step 1: Register new user
         res = await client.post("/auth/register", json={"email": new_user_email, "password": password})
         assert res.status_code == 201

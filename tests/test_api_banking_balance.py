@@ -2,7 +2,7 @@ import pytest
 import httpx
 from uuid import uuid4
 
-from tests.config import BASE_API_V1_URL
+from tests.config import BASE_API_V1_URL, get_test_client
 
 
 @pytest.mark.asyncio
@@ -10,7 +10,7 @@ async def test_get_balance_success():
     email = f"balance_{uuid4().hex[:8]}@example.com"
     password = "Password123!"
 
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         # Register and Login
         await client.post("/auth/register", json={"email": email, "password": password})
         login_res = await client.post(
@@ -32,6 +32,6 @@ async def test_get_balance_success():
 
 @pytest.mark.asyncio
 async def test_get_balance_unauthenticated():
-    async with httpx.AsyncClient(base_url=BASE_API_V1_URL) as client:
+    async with get_test_client() as client:
         res = await client.get("/banking/account/balance")
         assert res.status_code == 401

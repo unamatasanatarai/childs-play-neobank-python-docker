@@ -45,9 +45,12 @@ db-shell: ## Access the Postgres shell
 
 # --- Testing ---
 
-.PHONY: test
-test: ## Run the test suite (concurrency and integrity)
-	$(DOCKER_COMPOSE) exec $(API_SERVICE) pytest tests/
+test: ## Run the test suite on a temporary database
+	$(DOCKER_COMPOSE) exec $(DB_SERVICE) psql -U admin -d postgres -c "DROP DATABASE IF EXISTS childspay_test;" || true
+	$(DOCKER_COMPOSE) exec $(DB_SERVICE) psql -U admin -d postgres -c "CREATE DATABASE childspay_test;"
+	$(DOCKER_COMPOSE) exec -e DATABASE_URL="postgresql+asyncpg://admin:development_password@db:5432/childspay_test" $(API_SERVICE) alembic upgrade head
+	$(DOCKER_COMPOSE) exec -e DATABASE_URL="postgresql+asyncpg://admin:development_password@db:5432/childspay_test" $(API_SERVICE) python -m scripts.seed
+	$(DOCKER_COMPOSE) exec -e DATABASE_URL="postgresql+asyncpg://admin:development_password@db:5432/childspay_test" $(API_SERVICE) pytest tests/
 
 # --- Cleanup ---
 
