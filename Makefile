@@ -59,6 +59,13 @@ clean: ## Full Reset: Wipe DB volumes and pyc files
 	$(DOCKER_COMPOSE) down -v
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 
+.PHONY: destroy
+destroy: ## Completely destroy the project (containers, volumes, images, orphans)
+	$(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	rm -rf .pytest_cache
+	rm -f migrations/versions/*.py
+
 # --- Setup Routine ---
 
 .PHONY: setup
