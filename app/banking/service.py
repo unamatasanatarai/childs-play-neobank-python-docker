@@ -28,7 +28,12 @@ async def execute_transfer(
     try:
         # 4. Lock rows using FOR UPDATE
         # This blocks other transactions from touching these two accounts
-        stmt = select(Account).where(Account.id.in_(lock_ids)).with_for_update()
+        stmt = (
+            select(Account)
+            .where(Account.id.in_(lock_ids))
+            .with_for_update()
+            .execution_options(populate_existing=True)
+        )
         result = await db.execute(stmt)
         accounts = {acc.id: acc for acc in result.scalars().all()}
 

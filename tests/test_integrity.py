@@ -1,8 +1,11 @@
+import pytest
 from sqlalchemy import select, func
 from app.banking.models import Account
+from app.auth.models import User
 from app.database import AsyncSessionLocal
 
 
+@pytest.mark.asyncio
 async def test_ledger_sum_integrity():
     """
     Verifies that the total amount of money in the system is 50,000
