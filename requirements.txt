@@ -9,3 +9,6 @@ pyjwt==2.8.0
 python-multipart==0.0.9
 pydantic-settings
 python-jose[cryptography]
+pytest
+pytest-asyncio
+httpx

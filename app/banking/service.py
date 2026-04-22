@@ -8,11 +8,7 @@ from fastapi import HTTPException, status
 async def execute_transfer(
     db: AsyncSession, sender_user_id: UUID, recipient_id: UUID, amount: int
 ):
-    # 1. Prevent self-transfers
-    if sender_user_id == recipient_id:
-        raise HTTPException(status_code=422, detail="Cannot transfer to self")
-
-    # 2. Get Account IDs and sort them to prevent deadlocks
+    # 1. Get Account IDs and sort them to prevent deadlocks
     # We fetch the sender's account first
     sender_stmt = select(Account).where(Account.user_id == sender_user_id)
     sender_res = await db.execute(sender_stmt)
@@ -20,6 +16,10 @@ async def execute_transfer(
 
     if not sender_acc:
         raise HTTPException(status_code=404, detail="Sender account not found")
+
+    # 2. Prevent self-transfers
+    if sender_acc.id == recipient_id:
+        raise HTTPException(status_code=422, detail="Cannot transfer to self")
 
     # Sort IDs for locking order
     lock_ids = sorted([sender_acc.id, recipient_id])
